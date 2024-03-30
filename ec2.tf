@@ -14,16 +14,24 @@ resource "aws_spot_instance_request" "spot" {
 
 # Creates On-Demand Instance
 resource "aws_instance" "OD" {
-  count         = var.OD_INSTANCE_COUNT
-  ami           = data.aws_ami.ami.image_id
-  instance_type = var.OD_INSTANCE_TYPE
-  vpc_security_group_ids = [aws_security_group.allows_app.id]
-  subnet_id                   = element(data.terraform_remote_state.vpc.outputs.PRIVATE_SUBNET_IDS, count.index)
+  count                     = var.OD_INSTANCE_COUNT
+  ami                       = data.aws_ami.ami.image_id
+  instance_type             = var.OD_INSTANCE_TYPE
+  vpc_security_group_ids    = [aws_security_group.allows_app.id]
+  subnet_id                 = element(data.terraform_remote_state.vpc.outputs.PRIVATE_SUBNET_IDS, count.index)
   
 
   tags = {
     Name = "${var.COMPONENT}-${var.ENV}"
   }
+}
+
+#Creates EC2 Tags and attaches to the server
+resource "aws_ec2_tag" "app_tags" {
+  count             = var.OD_INSTANCE_COUNT + var.SPOT_INSTANCE_COUNT
+  resource_id       = concat(aws_instance.OD.*.id , aws_spot_instance_request.spot.*.id)
+  key               = "Name"
+  value             = "${var.COMPONENT}-${var.ENV}"
 }
 
 # If this is called by frontend component, then it has to be created in public subnet, if not in PRIVATE subnet
