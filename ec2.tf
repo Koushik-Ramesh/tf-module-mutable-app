@@ -26,10 +26,11 @@ resource "aws_instance" "OD" {
   }
 }
 
+
 #Creates EC2 Tags and attaches to the server
 resource "aws_ec2_tag" "app_tags" {
-  count             = var.OD_INSTANCE_COUNT + var.SPOT_INSTANCE_COUNT
-  resource_id       = concat(aws_instance.OD.*.id , aws_spot_instance_request.spot.*.id)
+  count             = local.INSTANCE_COUNT
+  resource_id       = element(local.INSTANCE_IDS, count.index)
   key               = "Name"
   value             = "${var.COMPONENT}-${var.ENV}"
 }
