@@ -2,7 +2,7 @@
 resource "null_resource" "app" {
 
     triggers = {
-      always_run = "${timestamp()}"
+      always_run = "${timestamp()}"         # This ensures provisioners executes all the time
     }
 
     count = local.INSTANCE_COUNT
@@ -14,7 +14,7 @@ resource "null_resource" "app" {
         host     = element(local.INSTANCE_PRIVATE_IPS, count.index)
     }
         inline = [
-            "ansible-pull -U https://github.com/Koushik-Ramesh/ansible.git -e ENV=dev -e COMPONENT=${var.COMPONENT} roboshop-pull.yml"
+            "ansible-pull -U https://github.com/Koushik-Ramesh/ansible.git -e ENV=dev -e COMPONENT=${var.Component} roboshop-pull.yml"
         ]
     }
 }
