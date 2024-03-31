@@ -1,5 +1,5 @@
 # Creates a listener and attaches to the private ALB
-resource "aws_lb_listener" "private" {
+resource "aws_lb_listener" "PRIVATE" {
     count               = var.INTERNAL ? 1 : 0        
     load_balancer_arn   = data.terraform_remote_state.alb.outputs.PRIVATE_ALB_ARN 
     port                = "80"
