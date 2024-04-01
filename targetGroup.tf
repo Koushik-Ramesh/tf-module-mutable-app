@@ -5,7 +5,7 @@ resource "aws_lb_target_group" "app" {
   protocol = "HTTP"
   vpc_id   = data.terraform_remote_state.vpc.outputs.VPC_ID
 
-    heath_check {
+    health_check {
         enabled             = true
         healthy_threshold   = 2
         interval            = 5
