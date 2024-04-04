@@ -6,13 +6,9 @@ resource "aws_lb_listener" "public" {
     protocol            = "HTTP"
 
  default_action {
-    type = "fixed-response"
-
-        fixed_response {
             type             = "forward"
             target_group_arn = aws_lb_target_group.app.arn
         }
-    }
 }
 
 
